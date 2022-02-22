@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_website_filter_partners_snippet_website_filter_partners_snippet,website_filter_partners_snippet.website_filter_partners_snippet,model_website_filter_partners_snippet_website_filter_partners_snippet,,1,0,0,0

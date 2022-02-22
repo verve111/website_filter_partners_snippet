@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+    <template id="snippets" inherit_id="website.snippets" name="Partners by ZIP Panel Option">
+        <xpath expr="//div[@id='snippet_feature']//div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="website_filter_partners_snippet.s_partners_by_zip"
+                t-thumbnail="/website_filter_partners_snippet/static/description/icon.png"/>
+        </xpath>
+    </template>
+    <!-- Snippet Partners by ZIP -->
+    <template id="s_partners_by_zip" name="Partners by ZIP">
+        <div class="oe_structure" />
+        <section class="s_partners_by_zip">
+            <div class="container">
+                <div class="js_partners_by_zip">
+                    <div class='text-center'>
+                        <i class='fa fa-circle-o-notch fa-spin fa-3x fa-fwg'></i>
+                        <span>Loading Partners</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    </data>
+</odoo>
