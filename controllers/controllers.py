@@ -1,20 +1,26 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+from odoo.http import request
+# from odoo.addons.website.controllers.main import QueryURL
+import logging
 
-# class WebsiteFilterPartnersSnippet(http.Controller):
-#     @http.route('/website_filter_partners_snippet/website_filter_partners_snippet/', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
+_logger = logging.getLogger(__name__)
 
-#     @http.route('/website_filter_partners_snippet/website_filter_partners_snippet/objects/', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('website_filter_partners_snippet.listing', {
-#             'root': '/website_filter_partners_snippet/website_filter_partners_snippet',
-#             'objects': http.request.env['website_filter_partners_snippet.website_filter_partners_snippet'].search([]),
-#         })
 
-#     @http.route('/website_filter_partners_snippet/website_filter_partners_snippet/objects/<model("website_filter_partners_snippet.website_filter_partners_snippet"):obj>/', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('website_filter_partners_snippet.object', {
-#             'object': obj
-#         })
+class WebsiteFilterPartnersSnippet(http.Controller):
+    @http.route('/website_filter_partners_snippet/website_filter_partners_snippet/', auth='public')
+    def index(self, **kw):
+        return "Hello, world"
+
+    @http.route(['/c/partners/', '/c/partners/page/<int:page>'], auth='public', type="json", website=True, csrf=False)
+    def list(self, page=1, domain=False, limit=20, **kwargs):
+        domain = domain or []
+        records = request.env["res.partner"].sudo().search(domain, offset=(page - 1) * limit, limit=limit)
+        total = request.env["res.partner"].sudo().search(domain).search_count(domain)
+        return request.website.viewref("website_filter_partners_snippet.s_partners_by_zip_items").render({
+            "objects": records,
+            "pager": request.website.pager(
+                url="/c/partners", page=page, step=limit,
+                total=total, scope=7, url_args=kwargs
+            ),
+        })

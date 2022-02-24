@@ -1,24 +1,93 @@
 <odoo>
     <data>
-    <template id="snippets" inherit_id="website.snippets" name="Partners by ZIP Panel Option">
-        <xpath expr="//div[@id='snippet_feature']//div[hasclass('o_panel_body')]" position="inside">
-            <t t-snippet="website_filter_partners_snippet.s_partners_by_zip"
-                t-thumbnail="/website_filter_partners_snippet/static/description/icon.png"/>
-        </xpath>
-    </template>
-    <!-- Snippet Partners by ZIP -->
-    <template id="s_partners_by_zip" name="Partners by ZIP">
-        <div class="oe_structure" />
-        <section class="s_partners_by_zip">
-            <div class="container">
-                <div class="js_partners_by_zip">
-                    <div class='text-center'>
-                        <i class='fa fa-circle-o-notch fa-spin fa-3x fa-fwg'></i>
-                        <span>Loading Partners</span>
+        <template id="assets_frontend" inherit_id="website.assets_frontend">
+            <!--xpath expr="link[last()]" position="after">
+                <link
+                    rel="stylesheet"
+                    type="text/css"
+                    href="/website_snippet_carousel_product/static/src/scss/s_product_carousel.scss"
+                />
+            </xpath-->
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/website_filter_partners_snippet/static/src/js/s_filter_partners_frontend.js"/>
+            </xpath>
+        </template>
+        <template id="assets_editor" inherit_id="web_editor.assets_editor">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/website_filter_partners_snippet/static/src/js/snippet.options.js"/>
+            </xpath>
+        </template>
+        <template id="snippets" inherit_id="website.snippets" name="Partners by ZIP Panel Option">
+            <xpath expr="//div[@id='snippet_feature']//div[hasclass('o_panel_body')]" position="inside">
+                <t t-snippet="website_filter_partners_snippet.s_partners_by_zip"
+                   t-thumbnail="/website_filter_partners_snippet/static/description/icon.png"/>
+            </xpath>
+        </template>
+        <!-- Snippet Partners by ZIP -->
+        <template id="s_partners_by_zip" name="Partners by ZIP">
+            <div class="oe_structure"/>
+            <section class="s_partners_by_zip">
+                <div class="container">
+                    <div class="js_partners_by_zip">
+                        <div class='text-center'>
+                            <i class='fa fa-circle-o-notch fa-spin fa-3x fa-fwg'></i>
+                            <span>Loading Partners</span>
+                        </div>
                     </div>
                 </div>
+            </section>
+        </template>
+        <template id="s_partners_by_zip_items">
+            <div class="oe_website_sale my-5">
+                <input type="hidden"
+                        name="partner_count"
+                        t-if="objects"
+                        t-att-value="len(objects)"/>
+                <t t-if="len(objects) > 0">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Website</th>
+                                <!--th scope="col">Handle</th-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="objects" t-as="partner">
+                                <tr>
+                                    <td>
+                                        <t t-esc="partner.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="partner.contact_address"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="partner.website"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <t t-call="website_filter_partners_snippet.pager"/>
+                </t>
             </div>
-        </section>
-    </template>
+        </template>
+        <template id="pager" name="Pager">
+            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination m-0 #{_classes}" t-att-style="style or None">
+                <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == 1 else ''}">
+                    <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link"
+                        t-att-data-pagenum="pager['page_previous']['num'] if pager['page']['num'] != 1 else 0">Prev</a>
+                </li>
+                <t t-foreach="pager['pages']" t-as="page">
+                    <li t-attf-class="page-item #{'active' if page['num'] == pager['page']['num'] else ''}">
+                        <a t-att-href="page['url']" class="page-link" t-raw="page['num']" t-att-data-pagenum="page['num']"></a></li>
+                </t>
+                <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
+                    <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"
+                        t-att-data-pagenum="pager['page_next']['num'] if pager['page']['num'] != pager['page_count'] else 0">Next</a>
+                </li>
+            </ul>
+        </template>
     </data>
 </odoo>
