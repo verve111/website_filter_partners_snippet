@@ -23,6 +23,7 @@
                    t-thumbnail="/website_filter_partners_snippet/static/description/icon.png"/>
             </xpath>
         </template>
+
         <!-- Snippet Partners by ZIP -->
         <template id="s_partners_by_zip" name="Partners by ZIP">
             <div class="oe_structure"/>
@@ -43,21 +44,28 @@
                         name="partner_count"
                         t-if="objects"
                         t-att-value="len(objects)"/>
-                <t t-if="len(objects) > 0">
-                    <table class="table table-striped table-bordered">
+                <t t-if="objects and len(objects) > 0">
+                    <table class="table table-striped table-bordered table-sm">
                         <thead>
                             <tr>
+                                <th scope="col" width="50px">Image</th>
                                 <th scope="col">Name</th>
+                                <th scope="col">Phone</th>
                                 <th scope="col">Address</th>
                                 <th scope="col">Website</th>
-                                <!--th scope="col">Handle</th-->
                             </tr>
                         </thead>
                         <tbody>
                             <t t-foreach="objects" t-as="partner">
                                 <tr>
                                     <td>
+                                        <span t-field="partner.image_small" t-options='{"widget": "image", "class": "mr-3"}'></span>
+                                    </td>
+                                    <td>
                                         <t t-esc="partner.name"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="partner.phone"/>
                                     </td>
                                     <td>
                                         <t t-esc="partner.contact_address"/>
@@ -88,6 +96,17 @@
                         t-att-data-pagenum="pager['page_next']['num'] if pager['page']['num'] != pager['page_count'] else 0">Next</a>
                 </li>
             </ul>
+        </template>
+
+        <!-- Snippet options -->
+        <template id="s_partners_by_zip_options" inherit_id="website.snippet_options">
+            <xpath expr="." position="inside">
+                <div data-js="js_partners_by_zip" data-selector=".js_partners_by_zip">
+                    <a href="#" class="dropdown-item s_partners_by_zip_set_domain">
+                        <i class="fa fa-fw fa-bars" />Set Domain
+                    </a>
+                </div>
+            </xpath>
         </template>
     </data>
 </odoo>

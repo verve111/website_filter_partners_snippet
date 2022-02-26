@@ -17,11 +17,11 @@ odoo.define("website_filter_partners_snippet.snippet_options", function (require
          * @override
          */
         _onLinkClick: function (ev) {
-            // Get the selected menu item
-            // var $elm = $(ev.target);
-            // if ($elm.is(".s_carousel_set_domain")) {
-            //     this.select_domain();
-            // } else if ($elm.is("[data-products-per-slide]")) {
+            var $elm = $(ev.target);
+            if ($elm.is(".s_partners_by_zip_set_domain")) {
+                this.select_domain();
+            }
+            // else if ($elm.is("[data-products-per-slide]")) {
             //     this.$target.attr(
             //         "data-products-per-slide",
             //         $elm.attr("data-products-per-slide")
@@ -48,7 +48,7 @@ odoo.define("website_filter_partners_snippet.snippet_options", function (require
          */
         onBuilt: function () {
             this._super();
-            //this.select_domain();
+            this.select_domain();
         },
 
         /**
@@ -104,7 +104,7 @@ odoo.define("website_filter_partners_snippet.snippet_options", function (require
             var def = wUtils.prompt({
                 id: this.popup_template_id,
                 window_title: this.popup_title,
-                input: _t("Domain (can be empty)"),
+                input: _t("Partner ZIP (can be empty)"),
                 init: function () {
                     return self.$target.attr("data-domain");
                 },
@@ -130,15 +130,5 @@ odoo.define("website_filter_partners_snippet.snippet_options", function (require
             this.$target.empty();
         },
 
-        /**
-         * @override
-         */
-        // interval: function (previewMode, value) {
-        //     this.$target.find('.carousel:first')
-        //         .carousel('dispose')
-        //         .carousel({
-        //             interval: Number(value),
-        //         });
-        // },
     });
 });

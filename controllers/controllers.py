@@ -13,10 +13,11 @@ class WebsiteFilterPartnersSnippet(http.Controller):
         return "Hello, world"
 
     @http.route(['/c/partners/', '/c/partners/page/<int:page>'], auth='public', type="json", website=True, csrf=False)
-    def list(self, page=1, domain=False, limit=20, **kwargs):
-        domain = domain or []
+    def list(self, page=1, zip=False, limit=10, **kwargs):
+        domain = [('zip', '=', zip)] if zip else []
         records = request.env["res.partner"].sudo().search(domain, offset=(page - 1) * limit, limit=limit)
-        total = request.env["res.partner"].sudo().search(domain).search_count(domain)
+        total = request.env["res.partner"].sudo().search_count(domain)
+        _logger.error('total' + str(total))
         return request.website.viewref("website_filter_partners_snippet.s_partners_by_zip_items").render({
             "objects": records,
             "pager": request.website.pager(

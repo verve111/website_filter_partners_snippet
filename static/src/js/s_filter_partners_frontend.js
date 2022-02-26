@@ -8,7 +8,7 @@ odoo.define("website_filter_partners_snippet.s_partners_by_zip", function (requi
 
     sAnimation.registry.js_partners_by_zip = sAnimation.Class.extend({
         selector: ".js_partners_by_zip",
-        limit: 3,
+        limit: 10,
         domain: [],
 
         start: function () {
@@ -36,7 +36,7 @@ odoo.define("website_filter_partners_snippet.s_partners_by_zip", function (requi
                 route: "/c/partners/page/" + pageNum,
                 params: {
                     limit: self.limit,
-                    domain: JSON.parse(self.domain),
+                    zip: JSON.parse(self.domain),
                 },
             }).then(function (object_html) {
                     var $object_html = $(object_html);
@@ -44,14 +44,14 @@ odoo.define("website_filter_partners_snippet.s_partners_by_zip", function (requi
                         .find("input[name='partner_count']")
                         .val();
                     if (!count) {
-                        self.$target.append(
-                            $("<div/>", {class: "col-md-6 offset-md-3"}).append(
+                        self.$target.html(
+                            $("<div/>", {class: "col-md-6 offset-md-3 my-5"}).append(
                                 $("<div/>", {
                                     class:
                                         "alert alert-warning" +
                                         " alert-dismissible text-center",
                                     text: _t(
-                                        "No partners was found." +
+                                        "No partners found." +
                                         " Make sure you have partners" +
                                         " published on the website."
                                     ),
