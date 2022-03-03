@@ -14,10 +14,27 @@ class WebsiteFilterPartnersSnippet(http.Controller):
 
     @http.route(['/c/partners/', '/c/partners/page/<int:page>'], auth='public', type="json", website=True, csrf=False)
     def list(self, page=1, zip=False, limit=10, **kwargs):
-        domain = [('zip', '=', zip)] if zip else []
-        records = request.env["res.partner"].sudo().search(domain, offset=(page - 1) * limit, limit=limit)
-        total = request.env["res.partner"].sudo().search_count(domain)
-        _logger.error('total' + str(total))
+        zip_where = ''
+        if zip:
+            arr = [x.strip() for x in zip.split(',')]
+            zip_where = ', '.join('\'{0}\''.format(w) for w in arr)
+            zip_where = ' AND p.zip IN (%s) ' % zip_where
+        count_query = """SELECT COUNT(*) FROM res_partner p, crm_lead l  
+            WHERE l.partner_assigned_id = p.id AND p.is_published = TRUE AND p.grade_id IS NOT NULL {0}"""\
+            .format(zip_where)
+        request.env.cr.execute(count_query)
+        total = request.env.cr.fetchone()[0]
+
+        query = """SELECT p.id FROM res_partner p, crm_lead l  
+            WHERE l.partner_assigned_id = p.id AND p.is_published = TRUE AND p.grade_id IS NOT NULL {0}
+            ORDER BY p.name ASC
+            LIMIT {1} OFFSET {2}"""\
+            .format(zip_where, limit, (page - 1) * limit)
+        request.env.cr.execute(query)
+        partner_ids = [row[0] for row in request.env.cr.fetchall()]
+        records = request.env["res.partner"].sudo().browse(partner_ids) if partner_ids else []
+
+        # _logger.info('total: ' + str(total))
         return request.website.viewref("website_filter_partners_snippet.s_partners_by_zip_items").render({
             "objects": records,
             "pager": request.website.pager(

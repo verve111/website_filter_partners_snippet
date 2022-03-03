@@ -14,7 +14,7 @@ odoo.define("website_filter_partners_snippet.s_partners_by_zip", function (requi
         start: function () {
             var self = this;
             //var limit = Number(this.$target.attr("data-products-limit")) || 12;
-            self.domain = this.$target.attr("data-domain") || "[]";
+            self.domain = this.$target.attr("data-domain") || "";
             // Prevent user edition
             self.$target.attr("contenteditable", "False");
 
@@ -36,7 +36,7 @@ odoo.define("website_filter_partners_snippet.s_partners_by_zip", function (requi
                 route: "/c/partners/page/" + pageNum,
                 params: {
                     limit: self.limit,
-                    zip: JSON.parse(self.domain),
+                    zip: self.domain,
                 },
             }).then(function (object_html) {
                     var $object_html = $(object_html);

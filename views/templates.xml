@@ -103,7 +103,7 @@
             <xpath expr="." position="inside">
                 <div data-js="js_partners_by_zip" data-selector=".js_partners_by_zip">
                     <a href="#" class="dropdown-item s_partners_by_zip_set_domain">
-                        <i class="fa fa-fw fa-bars" />Set Domain
+                        <i class="fa fa-fw fa-bars" />Set ZIP (comma separated)
                     </a>
                 </div>
             </xpath>
